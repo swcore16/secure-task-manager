@@ -30,3 +30,16 @@ def delete_task(task_id):
     tasks = [task for task in tasks if task["id"] != task_id]
 
     return jsonify({"message": "Task deleted"})
+
+# updating an existing task endpoint by id:
+@tasks_bp.route("/tasks/<int:task_id>", methods=["PUT"])
+def update_task(task_id):
+    data = request.get_json()
+
+    for task in tasks:
+        if task["id"] == task_id:
+            task["title"] = data.get("title", task["title"])
+            task["done"] = data.get("done", task["done"])
+            return jsonify(task)
+
+    return jsonify({"error": "Task not found"}), 404
